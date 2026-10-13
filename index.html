@@ -270,7 +270,7 @@
             el.classList.add('active-mode');
         }
 
-        // HÀM GỌI API BYPASS ĐÃ FIX CORS & LOAD FAILED
+        // HÀM GỌI API BYPASS SỬ DỤNG ALLORIGINS PROXY
         async function processBypass() {
             let url = document.getElementById('targetUrl').value.trim();
             if(!url) { 
@@ -296,10 +296,11 @@
             try {
                 const apiKey = "JFEURiaeiCC2pd63";
                 const rawApiUrl = `https://api.jerexd.my.id/api/tools/bypasslink?apikey=${apiKey}&url=${encodeURIComponent(url)}`;
-                const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(rawApiUrl)}`;
+                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(rawApiUrl)}`;
 
                 const response = await fetch(proxyUrl);
-                const data = await response.json();
+                const resJson = await response.json();
+                const data = JSON.parse(resJson.contents);
                 
                 clearInterval(interval);
 
