@@ -150,7 +150,7 @@
         <p style="color: var(--text-muted); margin-top: 15px; font-size: 12px; letter-spacing: 1px;">Môi trường xử lý sẵn sàng...</p>
     </div>
 
-    <!-- MÀN HÌNH 2: Nhập Key (Đã che mật khẩu sạch sẽ) -->
+    <!-- MÀN HÌNH 2: Nhập Key -->
     <div id="keyScreen" class="container hidden">
         <h1 class="logo">BYPASS LINK PRO</h1>
         <div class="panel" style="text-align: center;">
@@ -270,6 +270,7 @@
             el.classList.add('active-mode');
         }
 
+        // HÀM GỌI API BYPASS THỰC CHIẾN 100%
         async function processBypass() {
             let url = document.getElementById('targetUrl').value.trim();
             if(!url) { 
@@ -280,24 +281,51 @@
             document.getElementById('rocketLoadingModal').classList.remove('hidden');
             let progress = 0;
             
+            // Hiệu ứng chạy phần trăm giả lập mượt mà trước khi nhận phản hồi API
             let interval = setInterval(() => {
-                progress += Math.floor(Math.random() * 15) + 10;
-                if(progress >= 100) progress = 100;
-                document.getElementById('rocketProgressText').innerText = progress + "%";
-                
-                if(progress < 40) document.getElementById('rocketProgressDesc').innerText = "Đang gỡ bỏ Captcha & Quảng cáo...";
-                else if(progress < 80) document.getElementById('rocketProgressDesc').innerText = "Trích xuất Token link gốc...";
-                else document.getElementById('rocketProgressDesc').innerText = "Hoàn tất giải mã!";
+                if(progress < 85) {
+                    progress += Math.floor(Math.random() * 10) + 5;
+                    if(progress > 85) progress = 85;
+                    document.getElementById('rocketProgressText').innerText = progress + "%";
+                    
+                    if(progress < 40) document.getElementById('rocketProgressDesc').innerText = "Đang kết nối Server Bypass...";
+                    else if(progress < 70) document.getElementById('rocketProgressDesc').innerText = "Đang trích xuất Token link gốc...";
+                    else document.getElementById('rocketProgressDesc').innerText = "Đang giải mã...";
+                }
+            }, 150);
 
-                if(progress === 100) {
-                    clearInterval(interval);
+            try {
+                const apiKey = "JFEURiaeiCC2pd63";
+                const apiUrl = `https://api.jerexd.my.id/api/tools/bypasslink?apikey=${apiKey}&url=${encodeURIComponent(url)}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'GET',
+                    headers: {
+                        'User-Agent': 'BypassLink-Client/1.0'
+                    }
+                });
+
+                const data = await response.json();
+                clearInterval(interval);
+
+                if (data.status && data.result && data.result.bypassed_url) {
+                    document.getElementById('rocketProgressText').innerText = "100%";
+                    document.getElementById('rocketProgressDesc').innerText = "Vượt link thành công!";
+                    
                     setTimeout(() => {
                         document.getElementById('rocketLoadingModal').classList.add('hidden');
                         document.getElementById('resultPanel').classList.remove('hidden');
-                        document.getElementById('finalUrl').value = url;
-                    }, 500);
+                        document.getElementById('finalUrl').value = data.result.bypassed_url;
+                    }, 400);
+                } else {
+                    document.getElementById('rocketLoadingModal').classList.add('hidden');
+                    alert("❌ Lỗi: " + (data.message || "Không thể bẻ khóa link này!"));
                 }
-            }, 150);
+            } catch (error) {
+                clearInterval(interval);
+                document.getElementById('rocketLoadingModal').classList.add('hidden');
+                alert("❌ Lỗi kết nối API: " + error.message);
+            }
         }
 
         function copyLink() {
