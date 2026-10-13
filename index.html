@@ -148,13 +148,13 @@
         
         <div class="panel">
             <div class="panel-title">1. Cấu Hình Đường Link</div>
-            <input type="text" id="targetUrl" placeholder="Dán link (Link4m, Traffic1s,...) vào đây...">
+            <input type="text" id="targetUrl" placeholder="Dán link (vplink.in, just2earn.com,...) vào đây...">
             
             <p style="font-size: 12px; margin-top: 5px; margin-bottom: 8px; color: var(--text-muted);">Loại link / Nền tảng:</p>
             <div class="grid-2">
                 <div class="filter-btn active-mode" onclick="selectType(this)">Tự động (Auto)</div>
-                <div class="filter-btn" onclick="selectType(this)">Link4m</div>
-                <div class="filter-btn" onclick="selectType(this)">Traffic1s</div>
+                <div class="filter-btn" onclick="selectType(this)">vplink.in</div>
+                <div class="filter-btn" onclick="selectType(this)">just2earn</div>
                 <div class="filter-btn" onclick="selectType(this)">Khác</div>
             </div>
             
@@ -180,7 +180,7 @@
             <div class="rocket">🚀</div>
         </div>
         <div id="rocketProgressText">0%</div>
-        <div id="rocketProgressDesc">Đang kết nối Server Bypass mới...</div>
+        <div id="rocketProgressDesc">Đang kết nối Server Bypass Vercel...</div>
     </div>
 
     <div id="musicToggle" class="drag-widget music-widget" style="bottom: 20px; left: 20px;" onclick="toggleMusic()">
@@ -188,7 +188,7 @@
     </div>
 
     <div id="systemWidget" class="drag-widget system-widget" style="bottom: 90px; left: 20px;">
-        <div>📶 Ping: <span id="pingValue">42 ms</span></div>
+        <div>📶 Ping: <span id="pingValue">24 ms</span></div>
         <div>🕒 Giờ: <span id="timeValue">---</span></div>
     </div>
 
@@ -228,7 +228,7 @@
                 document.getElementById('keyScreen').classList.add('hidden');
                 document.getElementById('mainApp').classList.remove('hidden');
             } else {
-                alert("❌ Key kích hoạt không chính xác! Vuint lòng thử lại.");
+                alert("❌ Key kích hoạt không chính xác! Vui lòng thử lại.");
             }
         }
 
@@ -249,7 +249,7 @@
             el.classList.add('active-mode');
         }
 
-        // CHUYỂN SANG DÙNG ENDPOINT API MỚI VÀ AN TOÀN HƠN
+        // TÍCH HỢP TRỰC TIẾP API VERCEL CỦA SẾP
         async function processBypass() {
             let url = document.getElementById('targetUrl').value.trim();
             if(!url) { 
@@ -266,15 +266,15 @@
                     if(progress > 85) progress = 85;
                     document.getElementById('rocketProgressText').innerText = progress + "%";
                     
-                    if(progress < 40) document.getElementById('rocketProgressDesc').innerText = "Đang kết nối Server Bypass mới...";
+                    if(progress < 40) document.getElementById('rocketProgressDesc').innerText = "Đang kết nối Server Vercel...";
                     else if(progress < 70) document.getElementById('rocketProgressDesc').innerText = "Đang trích xuất Token link gốc...";
                     else document.getElementById('rocketProgressDesc').innerText = "Đang giải mã...";
                 }
             }, 150);
 
             try {
-                // Thay thế bằng endpoint API công khai dự phòng ổn định hơn
-                const apiUrl = `https://api.vinh.work/api/bypass?url=${encodeURIComponent(url)}`;
+                // Sử dụng API Flask cá nhân trên Vercel kèm API Key "Farhan"
+                const apiUrl = `https://link-bypass-api-mu.vercel.app/api?bypass=${encodeURIComponent(url)}&key=Farhan`;
 
                 let response = await fetch(apiUrl, {
                     method: 'GET',
@@ -287,10 +287,9 @@
                 
                 clearInterval(interval);
 
-                // Tương thích với cấu trúc trả về phổ biến của API bypass
-                let resultUrl = data.result || data.url || data.bypassed_url;
+                let resultUrl = data.bypassed_link || data.bypassed_url;
 
-                if (data.status && resultUrl) {
+                if (data.success && resultUrl) {
                     document.getElementById('rocketProgressText').innerText = "100%";
                     document.getElementById('rocketProgressDesc').innerText = "Vượt link thành công!";
                     
@@ -301,31 +300,12 @@
                     }, 400);
                 } else {
                     document.getElementById('rocketLoadingModal').classList.add('hidden');
-                    alert("❌ Lỗi từ Server API: " + (data.message || "Không thể bẻ khóa link này!"));
+                    alert("❌ Lỗi từ Server API: " + (data.error || "Không thể bẻ khóa link này!"));
                 }
             } catch (error) {
                 clearInterval(interval);
                 document.getElementById('rocketLoadingModal').classList.add('hidden');
-                // Fallback lần cuối qua proxy nếu API mới bị chặn mạng di động
-                try {
-                    document.getElementById('rocketLoadingModal').classList.remove('hidden');
-                    const backupApiUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(`https://api.jerexd.my.id/api/tools/bypasslink?apikey=JFEURiaeiCC2pd63&url=${encodeURIComponent(url)}`)}`;
-                    let bkRes = await fetch(backupApiUrl);
-                    let bkJson = await bkRes.json();
-                    let parsedData = JSON.parse(bkJson.contents);
-                    
-                    clearInterval(interval);
-                    document.getElementById('rocketLoadingModal').classList.add('hidden');
-                    
-                    if(parsedData.status && parsedData.result && parsedData.result.bypassed_url) {
-                        document.getElementById('resultPanel').classList.remove('hidden');
-                        document.getElementById('finalUrl').value = parsedData.result.bypassed_url;
-                        return;
-                    }
-                } catch(e) {
-                    // Nếu vẫn tịt thì báo lỗi thật
-                }
-                alert("❌ Lỗi kết nối: Máy chủ bypass đang bảo trì. Vui lòng thử lại sau ít phút!");
+                alert("❌ Lỗi kết nối: Không thể gọi đến API Vercel. Vui lòng kiểm tra lại mạng!");
             }
         }
 
