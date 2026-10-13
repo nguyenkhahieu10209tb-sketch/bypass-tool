@@ -270,7 +270,7 @@
             el.classList.add('active-mode');
         }
 
-        // HÀM GỌI API BYPASS THỰC CHIẾN 100%
+        // HÀM GỌI API BYPASS ĐÃ FIX CORS & LOAD FAILED
         async function processBypass() {
             let url = document.getElementById('targetUrl').value.trim();
             if(!url) { 
@@ -281,7 +281,6 @@
             document.getElementById('rocketLoadingModal').classList.remove('hidden');
             let progress = 0;
             
-            // Hiệu ứng chạy phần trăm giả lập mượt mà trước khi nhận phản hồi API
             let interval = setInterval(() => {
                 if(progress < 85) {
                     progress += Math.floor(Math.random() * 10) + 5;
@@ -296,16 +295,12 @@
 
             try {
                 const apiKey = "JFEURiaeiCC2pd63";
-                const apiUrl = `https://api.jerexd.my.id/api/tools/bypasslink?apikey=${apiKey}&url=${encodeURIComponent(url)}`;
+                const rawApiUrl = `https://api.jerexd.my.id/api/tools/bypasslink?apikey=${apiKey}&url=${encodeURIComponent(url)}`;
+                const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(rawApiUrl)}`;
 
-                const response = await fetch(apiUrl, {
-                    method: 'GET',
-                    headers: {
-                        'User-Agent': 'BypassLink-Client/1.0'
-                    }
-                });
-
+                const response = await fetch(proxyUrl);
                 const data = await response.json();
+                
                 clearInterval(interval);
 
                 if (data.status && data.result && data.result.bypassed_url) {
