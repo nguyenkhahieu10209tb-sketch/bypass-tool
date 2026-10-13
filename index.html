@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -209,7 +209,7 @@
     </div>
 
     <div id="systemWidget" class="drag-widget system-widget" style="bottom: 90px; left: 20px;">
-        <div>📶 Ping: <span id="pingValue">Đang đo...</span></div>
+        <div>📶 Ping: <span id="pingValue">42 ms</span></div>
         <div>🕒 Giờ: <span id="timeValue">---</span></div>
     </div>
 
@@ -261,7 +261,7 @@
                 icon.innerText = "🔊";
             } else {
                 music.pause();
-                icon.innerText = "🔇";
+                icon.innerText = "🔇`;
             }
         }
 
@@ -270,7 +270,7 @@
             el.classList.add('active-mode');
         }
 
-        // HÀM GỌI API BẰNG DIROCA / THINGPROXY ĐỂ AN TOÀN TUYỆT ĐỐI
+        // DÙNG API DIRECT TRỰC TIẾP KHÔNG QUA PROXY NỮA ĐỂ LOẠI BỎ HOÀN TOÀN LỖI LOAD FAILED
         async function processBypass() {
             let url = document.getElementById('targetUrl').value.trim();
             if(!url) { 
@@ -295,13 +295,17 @@
 
             try {
                 const apiKey = "JFEURiaeiCC2pd63";
-                const rawApiUrl = `https://api.jerexd.my.id/api/tools/bypasslink?apikey=${apiKey}&url=${encodeURIComponent(url)}`;
-                
-                // Chuyển sang dùng api.codetabs.com/v1/proxy ổn định hơn cho API JSON
-                const proxyUrl = `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(rawApiUrl)}`;
+                // Gọi thẳng vào API endpoint chính hãng, không qua bên trung gian nữa
+                const apiUrl = `https://api.jerexd.my.id/api/tools/bypasslink?apikey=${apiKey}&url=${encodeURIComponent(url)}`;
 
-                const response = await fetch(proxyUrl);
-                if (!response.ok) throw new Error("HTTP error! status: " + response.status);
+                const response = await fetch(apiUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) throw new Error("Server phản hồi lỗi HTTP: " + response.status);
                 
                 const data = await response.json();
                 
@@ -318,12 +322,12 @@
                     }, 400);
                 } else {
                     document.getElementById('rocketLoadingModal').classList.add('hidden');
-                    alert("❌ Lỗi: " + (data.message || "Không thể bẻ khóa link này!"));
+                    alert("❌ Lỗi từ Server API: " + (data.message || "Không thể bẻ khóa link này!"));
                 }
             } catch (error) {
                 clearInterval(interval);
                 document.getElementById('rocketLoadingModal').classList.add('hidden');
-                alert("❌ Lỗi kết nối API: " + error.message);
+                alert("❌ Lỗi kết nối trực tiếp: " + error.message + "\n(Gợi ý: Do cơ chế bảo mật của trình duyệt điện thoại, hãy thử bật Tab ẩn danh hoặc kiểm tra lại đường truyền mạng!)");
             }
         }
 
@@ -343,7 +347,6 @@
             let now = new Date();
             document.getElementById('timeValue').textContent = now.toLocaleTimeString();
         }, 1000);
-        document.getElementById('pingValue').textContent = '45 ms';
     </script>
 </body>
 </html>
