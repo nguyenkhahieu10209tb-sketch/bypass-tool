@@ -42,21 +42,6 @@
         .star { position: absolute; background: white; border-radius: 50%; animation: twinkle linear infinite; }
         @keyframes twinkle { 0%, 100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 1; box-shadow: 0 0 8px #00f2fe; transform: scale(1.2); } }
 
-        .shooting-star {
-            position: fixed; top: -10px; width: 120px; height: 2px;
-            background: linear-gradient(90deg, #00f2fe, transparent);
-            border-radius: 50%; opacity: 0; transform: rotate(-35deg);
-            animation: meteor 4s infinite ease-in-out; z-index: -1; pointer-events: none;
-        }
-        .star-1 { left: 30%; animation-delay: 0s; }
-        .star-2 { left: 70%; animation-delay: 1.8s; }
-        .star-3 { left: 50%; animation-delay: 3.2s; }
-        @keyframes meteor {
-            0% { transform: translateX(0) translateY(0) rotate(-35deg); opacity: 1; width: 120px; }
-            30% { transform: translateX(-400px) translateY(400px) rotate(-35deg); opacity: 0; width: 0px; }
-            100% { opacity: 0; }
-        }
-
         .container { max-width: 480px; margin: 0 auto; padding: 18px; padding-bottom: 80px; display: flex; flex-direction: column; justify-content: center; min-height: 100vh; }
         .hidden { display: none !important; }
         
@@ -136,15 +121,9 @@
 <body>
 
     <audio id="bgMusic" loop src="music.mp3"></audio>
-    
-    <div class="galaxy-bg"></div>
-    <div class="cyber-grid"></div>
-    <div class="shooting-star star-1"></div>
-    <div class="shooting-star star-2"></div>
-    <div class="shooting-star star-3"></div>
     <div id="starsContainer"></div>
 
-    <!-- MÀN HÌNH 1 -->
+    <!-- MÀN HÌNH 1: Chạm kích hoạt -->
     <div id="touchScreen" class="fullscreen-overlay">
         <div class="touch-text" onclick="goToKeyScreen()">✦ CHẠM ĐỂ KÍCH HOẠT BYPASS GALAXY ✦</div>
         <p style="color: var(--text-muted); margin-top: 15px; font-size: 12px; letter-spacing: 1px;">Môi trường xử lý sẵn sàng...</p>
@@ -193,6 +172,7 @@
         </div>
     </div>
 
+    <!-- Modal Loading Tên Lửa -->
     <div id="rocketLoadingModal" class="hidden">
         <div class="loading-container">
             <div class="loading-ring"></div>
@@ -204,6 +184,7 @@
         <div id="rocketProgressDesc">Đang kết nối Server Bypass...</div>
     </div>
 
+    <!-- Widgets nổi -->
     <div id="musicToggle" class="drag-widget music-widget" style="bottom: 20px; left: 20px;" onclick="toggleMusic()">
         <span id="musicIcon">🔇</span>
     </div>
@@ -216,6 +197,7 @@
     <script>
         const SECRET_KEY = "bohieudaycon09@";
 
+        // Tạo hiệu ứng sao trời ngẫu nhiên
         function createStars() {
             const container = document.getElementById('starsContainer');
             for(let i = 0; i < 60; i++) {
@@ -239,7 +221,7 @@
             music.play().then(() => {
                 document.getElementById('musicIcon').innerText = "🔊";
             }).catch(e => {
-                console.log("Cần thao tác để phát âm thanh");
+                console.log("Cần tương tác người dùng để phát âm thanh");
             });
         }
 
@@ -261,7 +243,7 @@
                 icon.innerText = "🔊";
             } else {
                 music.pause();
-                icon.innerText = "🔇`;
+                icon.innerText = "🔇";
             }
         }
 
@@ -270,7 +252,7 @@
             el.classList.add('active-mode');
         }
 
-        // DÙNG API DIRECT TRỰC TIẾP KHÔNG QUA PROXY NỮA ĐỂ LOẠI BỎ HOÀN TOÀN LỖI LOAD FAILED
+        // HÀM BYPASS AN TOÀN TUYỆT ĐỐI VỚI CƠ CHẾ DUAL-FETCH (DIRECT + PROXY FALLBACK)
         async function processBypass() {
             let url = document.getElementById('targetUrl').value.trim();
             if(!url) { 
@@ -293,41 +275,54 @@
                 }
             }, 150);
 
+            const apiKey = "JFEURiaeiCC2pd63";
+            const targetApiUrl = `https://api.jerexd.my.id/api/tools/bypasslink?apikey=${apiKey}&url=${encodeURIComponent(url)}`;
+            
+            let data = null;
+
             try {
-                const apiKey = "JFEURiaeiCC2pd63";
-                // Gọi thẳng vào API endpoint chính hãng, không qua bên trung gian nữa
-                const apiUrl = `https://api.jerexd.my.id/api/tools/bypasslink?apikey=${apiKey}&url=${encodeURIComponent(url)}`;
-
-                const response = await fetch(apiUrl, {
+                // Thử kết nối trực tiếp trước
+                let response = await fetch(targetApiUrl, {
                     method: 'GET',
-                    headers: {
-                        'Accept': 'application/json'
-                    }
+                    headers: { 'Accept': 'application/json' }
                 });
-
-                if (!response.ok) throw new Error("Server phản hồi lỗi HTTP: " + response.status);
-                
-                const data = await response.json();
-                
-                clearInterval(interval);
-
-                if (data.status && data.result && data.result.bypassed_url) {
-                    document.getElementById('rocketProgressText').innerText = "100%";
-                    document.getElementById('rocketProgressDesc').innerText = "Vượt link thành công!";
-                    
-                    setTimeout(() => {
-                        document.getElementById('rocketLoadingModal').classList.add('hidden');
-                        document.getElementById('resultPanel').classList.remove('hidden');
-                        document.getElementById('finalUrl').value = data.result.bypassed_url;
-                    }, 400);
+                if (response.ok) {
+                    data = await response.json();
                 } else {
-                    document.getElementById('rocketLoadingModal').classList.add('hidden');
-                    alert("❌ Lỗi từ Server API: " + (data.message || "Không thể bẻ khóa link này!"));
+                    throw new Error("Direct fetch failed");
                 }
-            } catch (error) {
-                clearInterval(interval);
+            } catch (err) {
+                try {
+                    // Nếu lỗi trực tiếp (CORS / mạng), tự động chuyển sang Proxy dự phòng dạng Raw
+                    let proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetApiUrl)}`;
+                    let proxyResponse = await fetch(proxyUrl);
+                    if (proxyResponse.ok) {
+                        data = await proxyResponse.json();
+                    } else {
+                        throw new Error("Proxy fetch failed");
+                    }
+                } catch (proxyErr) {
+                    clearInterval(interval);
+                    document.getElementById('rocketLoadingModal').classList.add('hidden');
+                    alert("❌ Lỗi kết nối API: Không thể giao tiếp với máy chủ bypass. Vui lòng kiểm tra lại đường truyền mạng!");
+                    return;
+                }
+            }
+
+            clearInterval(interval);
+
+            if (data && data.status && data.result && data.result.bypassed_url) {
+                document.getElementById('rocketProgressText').innerText = "100%";
+                document.getElementById('rocketProgressDesc').innerText = "Vượt link thành công!";
+                
+                setTimeout(() => {
+                    document.getElementById('rocketLoadingModal').classList.add('hidden');
+                    document.getElementById('resultPanel').classList.remove('hidden');
+                    document.getElementById('finalUrl').value = data.result.bypassed_url;
+                }, 400);
+            } else {
                 document.getElementById('rocketLoadingModal').classList.add('hidden');
-                alert("❌ Lỗi kết nối trực tiếp: " + error.message + "\n(Gợi ý: Do cơ chế bảo mật của trình duyệt điện thoại, hãy thử bật Tab ẩn danh hoặc kiểm tra lại đường truyền mạng!)");
+                alert("❌ Lỗi từ Server API: " + (data?.message || "Không thể bẻ khóa link này!"));
             }
         }
 
@@ -343,9 +338,13 @@
             window.open(url, '_blank');
         }
 
+        // Đồng hồ hệ thống chạy chính xác thời gian thực
         setInterval(() => {
             let now = new Date();
-            document.getElementById('timeValue').textContent = now.toLocaleTimeString();
+            let timeEl = document.getElementById('timeValue');
+            if(timeEl) {
+                timeEl.textContent = now.toLocaleTimeString();
+            }
         }, 1000);
     </script>
 </body>
