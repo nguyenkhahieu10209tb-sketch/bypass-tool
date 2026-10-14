@@ -177,7 +177,7 @@
             <div class="rocket">🚀</div>
         </div>
         <div id="rocketProgressText">0%</div>
-        <div id="rocketProgressDesc">Đang kết nối Server Vercel...</div>
+        <div id="rocketProgressDesc">Đang kết nối Server Render...</div>
     </div>
 
     <div id="musicToggle" class="drag-widget music-widget" style="bottom: 20px; left: 20px;" onclick="toggleMusic()">
@@ -244,7 +244,6 @@
 
             document.getElementById('rocketLoadingModal').classList.remove('hidden');
             
-            // Các bước trạng thái log ngầu lòi mô phỏng tool chuyên nghiệp
             const steps = [
                 { percent: 15, desc: "Đang kiểm tra kết nối..." },
                 { percent: 30, desc: "Kết nối thành công!" },
@@ -262,7 +261,6 @@
                     progress += Math.floor(Math.random() * 3) + 1;
                     progressText.innerText = progress + "%";
 
-                    // Cập nhật dòng mô tả theo %
                     for (let s of steps) {
                         if (progress >= s.percent) {
                             progressDesc.innerText = s.desc;
@@ -272,13 +270,14 @@
             }, 120);
 
             try {
-                const apiUrl = `https://link-bypass-api-mu.vercel.app/api/bypass?url=${encodeURIComponent(url)}`;
+                // Đã cập nhật trỏ thẳng tới API Render mới của sếp:
+                const apiUrl = `https://link-bypass-api-me41.onrender.com/bypass?url=${encodeURIComponent(url)}`;
                 let response = await fetch(apiUrl);
                 const data = await response.json();
                 
                 clearInterval(progressInterval);
 
-                let resultUrl = data.bypassed_url || data.destination;
+                let resultUrl = data.bypassed_url || data.destination || data.result;
 
                 if (data.success && resultUrl) {
                     progressText.innerText = "100%";
@@ -290,7 +289,7 @@
                     }, 400);
                 } else {
                     document.getElementById('rocketLoadingModal').classList.add('hidden');
-                    alert("❌ Lỗi: " + (data.error || "Không thể bẻ khóa link này!"));
+                    alert("❌ Lỗi: " + (data.error || data.message || "Không thể bẻ khóa link này!"));
                 }
             } catch (error) {
                 clearInterval(progressInterval);
