@@ -252,13 +252,13 @@
             }, 150);
 
             try {
-                const apiUrl = `https://link-bypass-api-mu.vercel.app/api?bypass=${encodeURIComponent(url)}&key=Farhan`;
+                const apiUrl = `https://link-bypass-api-mu.vercel.app/api/bypass?url=${encodeURIComponent(url)}`;
                 let response = await fetch(apiUrl);
                 const data = await response.json();
                 
                 clearInterval(interval);
 
-                let resultUrl = data.bypassed_link || data.bypassed_url;
+                let resultUrl = data.bypassed_url || data.destination;
 
                 if (data.success && resultUrl) {
                     document.getElementById('rocketProgressText').innerText = "100%";
