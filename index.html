@@ -111,7 +111,7 @@
         @keyframes spin { 100% { transform: rotate(360deg); } }
         @keyframes rocketOrbit { 0% { transform: translate(-50%,-50%) rotate(0deg) translateX(80px) rotate(0deg); } 100% { transform: translate(-50%,-50%) rotate(360deg) translateX(80px) rotate(-360deg); } }
         #rocketProgressText { color: var(--primary); font-weight: 800; font-size: 24px; margin-top: 20px; text-shadow: 0 0 10px var(--glow-cyan); }
-        #rocketProgressDesc { color: var(--text-muted); font-size: 13px; margin-top: 8px; }
+        #rocketProgressDesc { color: var(--text-muted); font-size: 13px; margin-top: 8px; text-align: center; }
 
         .drag-widget { position: fixed; z-index: 1000; cursor: grab; user-select: none; touch-action: none; }
         .music-widget { width: 56px; height: 56px; border-radius: 50%; background: rgba(15, 12, 41, 0.85); border: 2px solid var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 4px 15px rgba(0, 242, 254, 0.6); backdrop-filter: blur(10px); cursor: pointer; }
@@ -120,6 +120,8 @@
 </head>
 <body>
 
+    <div class="galaxy-bg"></div>
+    <div class="cyber-grid"></div>
     <audio id="bgMusic" loop src="music.mp3"></audio>
     <div id="starsContainer"></div>
 
@@ -241,28 +243,46 @@
             if(!url) { alert("⚠️ Ông chưa dán link rút gọn vào kìa!"); return; }
 
             document.getElementById('rocketLoadingModal').classList.remove('hidden');
-            let progress = 0;
             
-            let interval = setInterval(() => {
+            // Các bước trạng thái log ngầu lòi mô phỏng tool chuyên nghiệp
+            const steps = [
+                { percent: 15, desc: "Đang kiểm tra kết nối..." },
+                { percent: 30, desc: "Kết nối thành công!" },
+                { percent: 50, desc: "Đang tải module hệ thống..." },
+                { percent: 70, desc: "Đang giả lập bypass & bỏ qua xác thực..." },
+                { percent: 85, desc: "Đang trích xuất link đích..." }
+            ];
+
+            let progress = 0;
+            let progressText = document.getElementById('rocketProgressText');
+            let progressDesc = document.getElementById('rocketProgressDesc');
+
+            let progressInterval = setInterval(() => {
                 if(progress < 85) {
-                    progress += Math.floor(Math.random() * 10) + 5;
-                    if(progress > 85) progress = 85;
-                    document.getElementById('rocketProgressText').innerText = progress + "%";
+                    progress += Math.floor(Math.random() * 3) + 1;
+                    progressText.innerText = progress + "%";
+
+                    // Cập nhật dòng mô tả theo %
+                    for (let s of steps) {
+                        if (progress >= s.percent) {
+                            progressDesc.innerText = s.desc;
+                        }
+                    }
                 }
-            }, 150);
+            }, 120);
 
             try {
                 const apiUrl = `https://link-bypass-api-mu.vercel.app/api/bypass?url=${encodeURIComponent(url)}`;
                 let response = await fetch(apiUrl);
                 const data = await response.json();
                 
-                clearInterval(interval);
+                clearInterval(progressInterval);
 
                 let resultUrl = data.bypassed_url || data.destination;
 
                 if (data.success && resultUrl) {
-                    document.getElementById('rocketProgressText').innerText = "100%";
-                    document.getElementById('rocketProgressDesc').innerText = "Vượt link thành công!";
+                    progressText.innerText = "100%";
+                    progressDesc.innerText = "Bypass thành công!";
                     setTimeout(() => {
                         document.getElementById('rocketLoadingModal').classList.add('hidden');
                         document.getElementById('resultPanel').classList.remove('hidden');
@@ -273,9 +293,9 @@
                     alert("❌ Lỗi: " + (data.error || "Không thể bẻ khóa link này!"));
                 }
             } catch (error) {
-                clearInterval(interval);
+                clearInterval(progressInterval);
                 document.getElementById('rocketLoadingModal').classList.add('hidden');
-                alert("❌ Lỗi kết nối API Vercel!");
+                alert("❌ Lỗi kết nối API hoặc hết thời gian chờ (Timeout)!");
             }
         }
 
