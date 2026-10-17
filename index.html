@@ -2,9 +2,9 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#060713">
-<title>Bypass Link PRO - Galaxy Edition (v3 Final)</title>
+<title>Bypass Link PRO - Galaxy Edition (v3.1 Ultimate)</title>
 <style>
 :root{--bg:#060713;--primary:#00f2fe;--secondary:#9b51e0;--accent:#7b2cbf;--panel:rgba(15,12,41,.6);--muted:#a0a5c0;--success:#00ff88;--error:#ff4757;--warn:#ffd166;--glow-cyan:0 0 15px rgba(0,242,254,.6);--glow-purple:0 0 15px rgba(155,81,224,.6);--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
 *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
@@ -38,7 +38,7 @@ h1.logo{position:relative;text-align:center;font-size:26px;font-size:clamp(20px,
 .glitch::before{-webkit-text-fill-color:#ff2e63;animation:gl 3.6s steps(1) infinite}
 .glitch::after{-webkit-text-fill-color:#00f2fe;animation:gl 3.6s steps(1) .15s infinite reverse}
 @keyframes gl{0%,90%,100%{clip-path:inset(0 0 100% 0);transform:none}91%{clip-path:inset(8% 0 58% 0);transform:translate(-5px,0)}94%{clip-path:inset(62% 0 6% 0);transform:translate(5px,0)}97%{clip-path:inset(30% 0 40% 0);transform:translate(-3px,0)}}
-input{width:100%;padding:14px;border-radius:12px;border:1px solid rgba(155,81,224,.45);background:rgba(6,7,19,.6);color:#fff;margin-bottom:10px;font-size:16px;outline:0;transition:.3s}
+input{position:relative;z-index:2;-webkit-user-select:text;user-select:text;-webkit-touch-callout:default;width:100%;padding:14px;border-radius:12px;border:1px solid rgba(155,81,224,.45);background:rgba(6,7,19,.6);color:#fff;margin-bottom:10px;font-size:16px;outline:0;transition:.3s}
 input:focus{border-color:var(--primary);box-shadow:var(--glow-cyan)}
 .lbl{font-size:12px;color:var(--muted);margin-bottom:8px}
 .hint{font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5}.hint.w{color:var(--warn)}.hint.o{color:var(--success)}
@@ -49,6 +49,7 @@ input:focus{border-color:var(--primary);box-shadow:var(--glow-cyan)}
 .btn-launch{background:linear-gradient(135deg,#00f2fe,#4facfe);color:#060713;border-bottom:3px solid #0099a8;box-shadow:0 6px 0 #006670,var(--glow-cyan)}
 .btn:active{transform:translateY(5px) scale(.98);box-shadow:0 1px 0 rgba(0,0,0,.5)!important}.btn:disabled{opacity:.5}
 .full{position:fixed;inset:0;background:rgba(6,7,19,.3);z-index:999;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:14px}
+#touchScreen{cursor:pointer}
 #bootScreen{background:rgba(6,7,19,.5)}
 .touch-text{font-size:20px;font-weight:900;color:var(--primary);text-shadow:var(--glow-cyan);animation:pt 1.5s infinite;cursor:pointer;text-align:center;padding:0 20px}
 @keyframes pt{0%,100%{opacity:.6;transform:scale(.98)}50%{opacity:1;transform:scale(1.04)}}
@@ -90,7 +91,7 @@ input:focus{border-color:var(--primary);box-shadow:var(--glow-cyan)}
 .cd{min-width:38px;height:58px;padding:0 6px;display:flex;align-items:center;justify-content:center;border-radius:10px;font:900 30px var(--mono);color:var(--success);background:linear-gradient(160deg,rgba(0,255,136,.18),rgba(6,7,19,.9));border:1px solid rgba(0,255,136,.55);text-shadow:0 0 12px var(--success);box-shadow:0 0 16px rgba(0,255,136,.4),inset 0 1px 0 rgba(255,255,255,.2)}
 .cd.flip{animation:fl .8s ease-in-out}
 @keyframes fl{50%{transform:rotateY(180deg) scale(1.15)}to{transform:rotateY(360deg)}}
-.laser{position:absolute;top:0;bottom:0;left:-10%;width:3px;background:linear-gradient(transparent,#fff,transparent);box-shadow:0 0 14px 4px var(--primary);opacity:0}
+.laser{position:absolute;top:0;bottom:0;left:-10%;width:3px;background:linear-gradient(transparent,#fff,transparent);box-shadow:0 0 14px 4px var(--primary);opacity:0;pointer-events:none}
 .laser.go{animation:ls 1.4s ease-in-out 2}
 @keyframes ls{from{left:-5%;opacity:1}to{left:105%;opacity:1}}
 .hud{position:relative;border-radius:10px;overflow:hidden;background:#02030a;min-height:110px;border:1px solid rgba(0,242,254,.3)}
@@ -102,23 +103,58 @@ input:focus{border-color:var(--primary);box-shadow:var(--glow-cyan)}
 .tl{top:6px;left:6px;border-right:0;border-bottom:0}.tr{top:6px;right:6px;border-left:0;border-bottom:0}.bl{bottom:6px;left:6px;border-right:0;border-top:0}.br{bottom:6px;right:6px;border-left:0;border-top:0}
 .tag{position:absolute;top:10px;left:30px;font:700 10px var(--mono);color:var(--primary);letter-spacing:1px}
 .drag{position:fixed;z-index:1000;cursor:grab;user-select:none;-webkit-user-select:none;touch-action:none}
+body.typing .drag{pointer-events:none;opacity:.35}
+.galaxy,.glitch::before,.glitch::after{pointer-events:none}
 .music{bottom:20px;left:20px;width:56px;height:56px;border-radius:50%;background:rgba(15,12,41,.85);border:2px solid var(--primary);display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 4px 15px rgba(0,242,254,.6);backdrop-filter:blur(10px)}
 .sysw{bottom:90px;left:20px;min-width:132px;background:rgba(15,12,41,.85);border:1px solid var(--secondary);border-radius:12px;padding:8px 12px;font:11px/1.55 var(--mono);box-shadow:0 4px 15px rgba(155,81,224,.5);backdrop-filter:blur(10px)}
 .mt{display:block;height:3px;margin:1px 0 5px;border-radius:2px;background:rgba(255,255,255,.12);overflow:hidden}
 .mt u{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--primary),var(--secondary));transition:width .9s}
 .dot{display:inline-block;width:9px;height:9px;border-radius:50%}
 .dot[data-s=g]{background:var(--success);box-shadow:0 0 8px var(--success)}.dot[data-s=y]{background:var(--warn);box-shadow:0 0 8px var(--warn)}.dot[data-s=r]{background:var(--error);box-shadow:0 0 8px var(--error)}
-@media (prefers-reduced-motion:reduce){.gyro,.arm,.rocket,.scan,.sw,.glitch::before,.glitch::after{animation:none}}
+@media (prefers-reduced-motion:reduce){.gyro,.arm,.rocket,.scan,.sw,.glitch::before,.glitch::after,.galaxy,.cyber-grid,.frame i,.panel::before,.btn::after,h1.logo,.touch-text,.pl i,.orb{animation:none}}
 </style>
 </head>
 <body>
+<script>
+/* Guard: bắt mọi lỗi JS, hiện rõ chữ lỗi trên màn hình */
+(function(){
+  var seen={},shown=0;
+  function banner(t){
+    try{
+      var d=document.createElement('div');
+      d.style.cssText='position:fixed;left:8px;right:8px;top:8px;z-index:2147483647;background:#7a0019;color:#fff;font:12px/1.4 monospace;padding:8px 10px;border-radius:8px;white-space:pre-wrap;word-break:break-word;pointer-events:none;opacity:.96';
+      d.textContent=t;
+      (document.body||document.documentElement).appendChild(d);
+      setTimeout(function(){if(d.parentNode)d.parentNode.removeChild(d)},15000);
+    }catch(_){}
+  }
+  function show(msg,where){
+    msg=String(msg||'Không rõ lỗi');
+    try{console.error('[JS]',where||'',msg)}catch(_){}
+    if(seen[msg]||shown>=3)return;
+    seen[msg]=1;shown++;
+    var t='Lỗi JS: '+msg+(where?'\n('+where+')':'');
+    banner(t);
+    try{alert(t)}catch(_){}
+  }
+  window.__report=function(e,where){show(e&&e.message?e.message:e,where)};
+  window.addEventListener('error',function(ev){
+    var t=ev&&ev.target;
+    if(t&&t!==window&&t.tagName)return;
+    var m=(ev&&ev.message)||(ev&&ev.error&&ev.error.message)||'Script error.';
+    var w=ev&&ev.lineno?'dòng '+ev.lineno+':'+(ev.colno||0):'';
+    show(m,w);
+  },true);
+  window.addEventListener('unhandledrejection',function(ev){var r=ev&&ev.reason;show(r&&r.message?r.message:r,'promise')});
+})();
+</script>
 <div class="galaxy"></div><div class="cyber-grid"></div>
 <canvas id="bg"></canvas><canvas id="fx"></canvas>
 <div class="frame"><i></i><i></i><i></i><i></i><b class="sw"></b></div>
 <audio id="bgMusic" loop src="music.mp3"></audio>
 
 <div id="touchScreen" class="full">
-  <div class="touch-text" onclick="goBoot()">✦ CHẠM ĐỂ KÍCH HOẠT BYPASS GALAXY ✦</div>
+  <div class="touch-text">✦ CHẠM ĐỂ KÍCH HOẠT BYPASS GALAXY ✦</div>
   <p class="sub">Môi trường xử lý sẵn sàng...</p>
 </div>
 
@@ -134,7 +170,7 @@ input:focus{border-color:var(--primary);box-shadow:var(--glow-cyan)}
     <div class="panel-title" style="justify-content:center">Bảo Mật Hệ Thống</div>
     <p class="hint">Hệ thống yêu cầu Key kích hoạt để truy cập</p>
     <input type="password" id="inputKey" placeholder="🔑 Nhập Key kích hoạt của bạn..." style="text-align:center">
-    <button class="btn btn-primary" onclick="verifyKey()">KÍCH HOẠT KEY</button>
+    <button class="btn btn-primary" id="btnKey" type="button">KÍCH HOẠT KEY</button>
   </div>
 </div>
 
@@ -143,9 +179,9 @@ input:focus{border-color:var(--primary);box-shadow:var(--glow-cyan)}
   <div class="panel">
     <div class="panel-title">1. Cấu Hình Mục Tiêu</div>
     <p class="lbl">Tên trang đích hoặc dán link:</p>
-    <input type="text" id="target" placeholder="vd: slotsunda.com" autocapitalize="none" autocorrect="off" spellcheck="false" oninput="detect()">
+    <input type="text" id="target" placeholder="vd: slotsunda.com" inputmode="url" enterkeyhint="go" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false">
     <div id="hint" class="hint">Nhập tên trang đích mà link rút gọn yêu cầu bạn tìm trên Google.</div>
-    <button class="btn btn-launch" id="goBtn" onclick="launch()">🚀 KHỞI CHẠY BYPASS</button>
+    <button class="btn btn-launch" id="goBtn" type="button">🚀 KHỞI CHẠY BYPASS</button>
     <p class="hint" style="margin:10px 0 0">Chỉ lấy mã rồi thoát, đừng đăng ký hay nạp tiền ở trang đích. Captcha ở link rút gọn do bạn tự giải.</p>
   </div>
 </div>
@@ -169,12 +205,12 @@ input:focus{border-color:var(--primary);box-shadow:var(--glow-cyan)}
       <div class="panel-title">2. Kết Quả Giải Mã</div>
       <div class="cardsWrap"><div id="cards"></div><i id="laser" class="laser"></i></div>
       <p class="hint o" style="text-align:center">⚡ Đã lấy mã! Dán vào link rút gọn rồi tự giải captcha.</p>
-      <button class="btn btn-launch" onclick="copyCode()">SAO CHÉP MÃ</button>
+      <button class="btn btn-launch" id="btnCopy" type="button">SAO CHÉP MÃ</button>
     </div>
     <div class="panel">
       <div class="panel-title">Camera trang đích</div>
       <div class="hud">
-        <img id="shot" class="hidden" alt="" onload="this.classList.remove('hidden');$('tag').textContent='● LIVE FEED'">
+        <img id="shot" class="hidden" alt="">
         <div class="ov"></div><i class="scan"></i>
         <span class="c tl"></span><span class="c tr"></span><span class="c bl"></span><span class="c br"></span>
         <b id="tag" class="tag">○ NO SIGNAL</b>
@@ -184,12 +220,12 @@ input:focus{border-color:var(--primary);box-shadow:var(--glow-cyan)}
       <div class="panel-title">Terminal</div>
       <div id="term" class="term"></div>
     </div>
-    <button class="btn btn-primary" onclick="closeRun()">ĐÓNG</button>
+    <button class="btn btn-primary" id="btnClose" type="button">ĐÓNG</button>
   </div>
 </div>
 
-<div id="musicToggle" class="drag music"><span id="musicIcon">🔇</span></div>
-<div id="sysW" class="drag sysw">
+<div id="musicToggle" class="drag music" role="button" aria-label="Bật/tắt nhạc nền"><span id="musicIcon">🔇</span></div>
+<div id="sysW" class="drag sysw" title="Chỉ số CPU/RAM">
   <div>📶 Ping: <b id="pg">---</b></div>
   <div>🕒 Giờ: <b id="tm">---</b></div>
   <div>⚙ CPU <b id="cpu">--</b><i class="mt"><u id="cpuB"></u></i></div>
@@ -198,36 +234,56 @@ input:focus{border-color:var(--primary);box-shadow:var(--glow-cyan)}
 </div>
 
 <script>
+(function(){
+try{
 const API="https://link-bypass-api-1-irup.onrender.com";
 const SECRET_KEY="bohieudaycon09@";
-const $=id=>document.getElementById(id);
+const SPARE={};
+const $=id=>{
+  const e=document.getElementById(id);
+  if(e)return e;
+  if(!SPARE[id]){SPARE[id]=document.createElement(({bgMusic:'audio',bg:'canvas',fx:'canvas',shot:'img'})[id]||'input')}
+  return SPARE[id];
+};
+const on=(id,ev,fn,o)=>{const e=document.getElementById(id);if(!e)return false;e.addEventListener(ev,fn,o);return true};
+const clear=el=>{while(el&&el.firstChild)el.removeChild(el.firstChild)};
+const rpt=(e,w)=>{try{window.__report(e,w)}catch(_){}};
+const safe=(fn,name)=>{try{return fn()}catch(e){rpt(e,name)}};
+function playMusic(){const m=$('bgMusic');try{const p=m.play();if(p&&p.then)p.then(()=>{$('musicIcon').innerText='🔊'},()=>{});else $('musicIcon').innerText='🔊'}catch(e){}}
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const isObj=v=>!!v&&typeof v==='object'&&!Array.isArray(v);
 const mmss=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
 const SHORT=/link4m|vplink|linkvip|layma|tinyurl|bit\.ly|ouo\.io|cutt\.ly/i;
 const TAG={ok:'OK',wt:'WAIT',wn:'WARN',er:'ERR'};
 const ALLOWED_TAGS=['ok','wt','wn','er'];
+const MAX_LINES=250;
 let ac,run=0,tk,t0,lastCode='',lastLine='',q=[],typing=false;
 
-/* ===== Inflight Set: per-call AbortController + scoped abort-all ===== */
+/* ===== Pre-wake: Đánh thức ngầm Render ngay khi bật app ===== */
+function preWake(){
+  fetch(API+'/health',{method:'GET',mode:'no-cors',cache:'no-store'}).catch(()=>{});
+}
+
+/* ===== Inflight Set + text-first JSON (Timeout 60s cho /getcode) ===== */
 const inflight=new Set();
 async function api(p,ms,scope){
   const c=new AbortController();
   c._scope=scope||'general';
   inflight.add(c);
-  const t=setTimeout(()=>c.abort(),ms||12000);
+  const t=setTimeout(()=>c.abort(),ms||60000);
   try{
     const r=await fetch(API+p,{signal:c.signal,cache:'no-store',headers:{Accept:'application/json'}});
     if(!r.ok)throw new Error('HTTP_'+r.status);
     const ct=r.headers.get('content-type')||'';
     if(!ct.includes('application/json'))throw new Error('INVALID_JSON');
-    return await r.json();
+    const tx=await r.text();
+    if(!tx||tx.length>2e6)throw new Error('EMPTY_BODY');
+    try{return JSON.parse(tx)}catch(_){throw new Error('INVALID_JSON')}
   }finally{clearTimeout(t);inflight.delete(c)}
 }
-function abortRun(){
-  for(const c of inflight){if(c._scope==='run'){try{c.abort()}catch(e){}}}
-}
+function abortRun(){for(const c of inflight){if(c._scope==='run'){try{c.abort()}catch(e){}}}}
 
-/* ===== Terminal: XSS-safe + disconnect guard ===== */
+/* ===== Terminal: XSS-safe, giới hạn 250 dòng ===== */
 function typeLine(box,t,k,cb){
   box.querySelectorAll('.cur').forEach(e=>e.remove());
   const d=document.createElement('div');
@@ -236,6 +292,7 @@ function typeLine(box,t,k,cb){
   const level=ALLOWED_TAGS.includes(k)?k:'wt';
   b.className=level;b.textContent='['+TAG[level]+']';
   d.appendChild(b);d.appendChild(s);box.appendChild(d);
+  while(box.childElementCount>MAX_LINES)box.firstElementChild.remove();
   let i=0;const sp=q.length>5?1:14;
   const iv=setInterval(()=>{
     if(!d.isConnected){clearInterval(iv);return}
@@ -249,7 +306,7 @@ function typeLine(box,t,k,cb){
   },sp);
 }
 function next(){const x=q.shift();if(!x){typing=false;return}typing=true;typeLine($('term'),x[0],x[1],next)}
-function log(t,k){q.push([t,k]);if(!typing)next()}
+function log(t,k){q.push([String(t),k]);if(!typing)next()}
 function cls(l){return /LỖI|Không bấm|Hết thời gian/i.test(l)?'wn':/ĐÃ CÓ MÃ|Đã bấm|Mở trang|Kết thúc/.test(l)?'ok':'wt'}
 
 /* ===== Âm thanh ===== */
@@ -258,15 +315,15 @@ function unlock(){try{ac=ac||new(window.AudioContext||window.webkitAudioContext)
 function ting(){try{unlock();[880,1320].forEach((f,i)=>{const o=ac.createOscillator(),g=ac.createGain(),t=ac.currentTime+i*.09;o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(.25,t);g.gain.exponentialRampToValueAtTime(.001,t+1.2);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+1.3)})}catch(e){}}
 
 /* ===== Khởi động & Key ===== */
-function goBoot(){unlock();$('bgMusic').play().then(()=>$('musicIcon').innerText='🔊').catch(()=>{});
+function goBoot(){unlock();playMusic();preWake();
   $('touchScreen').classList.add('hidden');$('bootScreen').classList.remove('hidden');
-  [['ok','Initializing galaxy core...'],['ok','Loading cyber modules...'],['wt','Connecting to Render node...'],['ok','Secure channel established']].forEach((x,i)=>setTimeout(()=>typeLine($('bootLog'),x[1],x[0]),i*700));
+  [['ok','Initializing galaxy core...'],['ok','Loading cyber modules...'],['wt','Awakening Render server node...'],['ok','Secure channel established']].forEach((x,i)=>setTimeout(()=>typeLine($('bootLog'),x[1],x[0]),i*700));
   setTimeout(()=>{$('bootBar').style.width='100%'},50);
   setTimeout(()=>{$('bootScreen').classList.add('hidden');$('keyScreen').classList.remove('hidden')},3400)}
 function verifyKey(){if($('inputKey').value.trim()===SECRET_KEY){$('keyScreen').classList.add('hidden');$('mainApp').classList.remove('hidden')}else alert('❌ Key kích hoạt không chính xác!')}
-function toggleMusic(){const m=$('bgMusic');if(m.paused){m.play().then(()=>$('musicIcon').innerText='🔊').catch(()=>{})}else{m.pause();$('musicIcon').innerText='🔇'}}
+function toggleMusic(){const m=$('bgMusic');if(m.paused){playMusic()}else{m.pause();$('musicIcon').innerText='🔇'}}
 $('inputKey').addEventListener('keydown',e=>e.key==='Enter'&&verifyKey());
-$('target').addEventListener('keydown',e=>e.key==='Enter'&&launch());
+$('target').addEventListener('keydown',e=>e.key==='Enter'&&startLaunch());
 
 /* ===== Nhận dạng trang đích ===== */
 function host(v){v=v.trim();if(!v||/\s/.test(v))return null;try{const h=new URL(/^https?:\/\//i.test(v)?v:'https://'+v).hostname.replace(/^www\./,'');return h.includes('.')?h:null}catch(e){return null}}
@@ -287,7 +344,7 @@ setInterval(()=>{const h=document.body.classList.contains('hot');cpu=wob(cpu,h?5
 /* ===== Lifecycle màn chạy ===== */
 function openRun(){
   run++;q=[];typing=false;lastLine='';
-  $('term').replaceChildren();
+  clear($('term'));
   $('mainApp').classList.add('hidden');$('run').classList.remove('hidden');
   document.body.classList.add('hot');
   $('coreBox').classList.remove('hidden');$('core').classList.remove('stop');
@@ -301,11 +358,11 @@ function openRun(){
 }
 function stopAll(){clearInterval(tk);document.body.classList.remove('hot');$('core').classList.add('stop')}
 function closeRun(){run++;abortRun();stopAll();$('run').classList.add('hidden');$('mainApp').classList.remove('hidden');$('goBtn').disabled=false}
-function fail(m,busy){stopAll();$('goBtn').disabled=false;$('state').textContent=m;$('state').style.color=busy?'var(--warn)':'var(--error)';log(m,busy?'wn':'er');busy?light('y','Đang bận'):light('r','Lỗi')}
+function fail(m,busy){m=String(m);stopAll();$('goBtn').disabled=false;$('state').textContent=m;$('state').style.color=busy?'var(--warn)':'var(--error)';log(m,busy?'wn':'er');busy?light('y','Đang bận'):light('r','Lỗi')}
 function win(c){stopAll();$('goBtn').disabled=false;lastCode=c;$('coreBox').classList.add('hidden');$('resBox').classList.remove('hidden');log('Đã lấy được mã: '+c,'ok');light('g','Online');reveal(c);victory()}
 function startTick(){t0=Date.now();clearInterval(tk);const f=()=>{const s=Math.floor((Date.now()-t0)/1000),r=Math.max(0,600-s);$('el').textContent=mmss(s);$('rem').textContent=mmss(r);$('arc').style.strokeDashoffset=326.7*(1-r/600);$('ringBox').classList.toggle('danger',r<60)};f();tk=setInterval(f,1000)}
 
-/* ===== Launch & Poll ===== */
+/* ===== Launch & Poll (với Retry tự động chống cold-start) ===== */
 async function launch(){
   if($('goBtn').disabled)return;
   unlock();
@@ -316,33 +373,44 @@ async function launch(){
   const id=openRun();
   let up=false;
   log('Mục tiêu: '+h,'ok');
-  for(let i=1;i<=12&&id===run;i++){
-    try{const d=await api('/health',9000,'run');if(d&&d.status==='online'){up=true;break}}catch(e){}
-    log('Đang đánh thức máy chủ ('+i+'/12)...','wt');
+  for(let i=1;i<=15&&id===run;i++){
+    try{const d=await api('/health',10000,'run');if(d&&d.status==='online'){up=true;break}}catch(e){}
+    if(id!==run)return;
+    log('Đang đánh thức máy chủ Render ('+i+'/15)...','wt');
     await sleep(3000);
   }
   if(id!==run)return;
   if(!up)return fail('Không đánh thức được máy chủ. Thử lại sau ít phút.');
-  log('Máy chủ sẵn sàng','ok');
+  log('Máy chủ sẵn sàng, đang giao việc...','ok');
   let d;
-  try{d=await api('/getcode?format=json&wait=480&domain='+encodeURIComponent(h),20000,'run')}
-  catch(e){return fail('Không giao được việc cho máy chủ.')}
+  for(let retry=1;retry<=2&&id===run;retry++){
+    try{
+      d=await api('/getcode?format=json&wait=480&domain='+encodeURIComponent(h),60000,'run');
+      break;
+    }catch(e){
+      if(retry===2){if(id!==run)return;return fail('Không giao được việc cho máy chủ (timeout).')}
+      log('Đang thử lại kết nối với máy chủ...','wn');
+      await sleep(2000);
+    }
+  }
   if(id!==run)return;
-  if(!d||typeof d!=='object')return fail('Phản hồi máy chủ không hợp lệ.');
+  if(!isObj(d))return fail('Phản hồi máy chủ không hợp lệ.');
   if(d.error)return fail(String(d.error));
   if(d.reused)return fail('Máy đang bận, thử lại sau',true);
   if(d.id==null)return fail('Máy chủ không trả về mã công việc.');
   log('Đã giao việc #'+d.id+'. Đang thực thi tiến trình...','ok');
   $('state').textContent='ĐANG LẤY MÃ...';
   startTick();
-  poll(d.id,id);
+  poll(d.id,id).catch(e=>{rpt(e,'poll');if(id===run)fail('Lỗi xử lý: '+(e&&e.message||e))});
 }
 
 async function poll(jid,id){
-  let miss=0;
+  let miss=0,seen=0;
   const sid=String(jid);
   const validSid=/^[a-zA-Z0-9_-]{1,128}$/.test(sid);
+  const dead=Date.now()+620000;
   while(id===run){
+    if(Date.now()>dead)return fail('Hết thời gian chờ phản hồi từ máy chủ.');
     let j;
     try{j=await api('/job?id='+encodeURIComponent(sid),12000,'run')}
     catch(e){
@@ -353,7 +421,7 @@ async function poll(jid,id){
       continue;
     }
     if(id!==run)return;
-    if(!j||typeof j!=='object'){
+    if(!isObj(j)){
       if(++miss>=6)return fail('Phản hồi máy chủ không hợp lệ.');
       await sleep(3000);
       continue;
@@ -361,7 +429,9 @@ async function poll(jid,id){
     miss=0;
     if(j.error)return fail(String(j.error));
     const a=Array.isArray(j.log)?j.log:[];
-    for(const l of a.slice(a.lastIndexOf(lastLine)+1))log(String(l),cls(String(l)));
+    const st=(seen&&a.length>=seen&&a[seen-1]===lastLine)?seen:a.lastIndexOf(lastLine)+1;
+    for(const l of a.slice(st))log(String(l),cls(String(l)));
+    seen=a.length;
     if(a.length)lastLine=a[a.length-1];
     if(validSid){
       const u=new URL('/shot',API);
@@ -381,7 +451,7 @@ async function poll(jid,id){
 
 /* ===== Thẻ mã lật 3D + laser ===== */
 function reveal(code){
-  const b=$('cards');b.replaceChildren();
+  const b=$('cards');clear(b);
   const R='ABCDEFGHJKLMNPQRSTUVWXYZ0123456789',rd=()=>R[Math.random()*R.length|0];
   [...code].forEach((ch,i)=>{
     const d=document.createElement('div');d.className='cd';d.textContent=rd();b.appendChild(d);
@@ -430,13 +500,14 @@ function victory(){
   [0,350,750,1150,1600].forEach(t=>setTimeout(()=>boom(innerWidth*(.15+Math.random()*.7),innerHeight*(.2+Math.random()*.35),70),t));
 }
 
-/* ===== Nền hologram 3D + Adaptive FPS có phục hồi ===== */
+/* ===== Nền hologram 3D + Adaptive FPS & Idle Throttling chống lag khi dùng lâu ===== */
 const bgc=$('bg'),bx=bgc?bgc.getContext('2d'):null;
 const RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
 let W=0,H=0,RR=1,pts=[],P=[],px=-999,py=-999,lx=0,ly=0,mx=0,my=0,ra=0,rb=0,ang=0,grad=null,gx=-1,gy=-1;
 
-let baseCount=64,targetCount=64;
-let perfFrames=0,perfStart=0,badStreak=0,goodStreak=0,skipWindows=1;
+let baseCount=64,targetCount=64,tilted=false,lockTilt=false;
+let perfFrames=0,perfStart=0,badStreak=0,goodStreak=0,skipWindows=1,refFps=0,trimFrom=0;
+let lastInteractionTime=performance.now();
 
 function newPt(){
   const v=RM?0:.3;
@@ -463,25 +534,31 @@ function seed(){
   });
   P=pts.map(()=>({x:0,y:0,s:1,h:0}));
   badStreak=0;goodStreak=0;
-  perfFrames=0;perfStart=performance.now();
+  perfFrames=0;perfStart=performance.now();trimFrom=0;
   skipWindows=1;
 }
 
 function adjustQuality(now){
   if(!perfStart){perfStart=now;perfFrames=0;return}
-  perfFrames++;
-  if(perfFrames<60)return;
+  if(++perfFrames<60)return;
   const elapsed=now-perfStart;
+  perfFrames=0;perfStart=now;
+  if(elapsed<=0)return;
   const fps=60000/elapsed;
-  if(skipWindows>0){skipWindows--;perfFrames=0;perfStart=now;return}
-  if(fps<45&&targetCount>30){
-    if(++badStreak>=2){
-      targetCount=Math.max(30,targetCount-20);
-      while(pts.length>targetCount)pts.pop();
-      while(P.length>targetCount)P.pop();
-      badStreak=0;goodStreak=0;
-    }
-  }else if(fps>55&&targetCount<baseCount){
+  if(skipWindows>0){skipWindows--;return}
+  if(fps>refFps&&fps<=144)refFps=fps;
+  if(trimFrom){if(fps<trimFrom*1.12)refFps=fps;trimFrom=0}
+  if(fps<refFps*.75||fps<24){
+    if(targetCount>30){
+      if(++badStreak>=2){
+        trimFrom=fps;
+        targetCount=Math.max(30,targetCount-20);
+        while(pts.length>targetCount)pts.pop();
+        while(P.length>targetCount)P.pop();
+        badStreak=0;goodStreak=0;
+      }
+    }else if(++badStreak>=3){refFps=fps;badStreak=0}
+  }else if(fps>=refFps*.92&&targetCount<baseCount){
     if(++goodStreak>=3){
       targetCount=Math.min(baseCount,targetCount+10);
       while(pts.length<targetCount){
@@ -495,13 +572,13 @@ function adjustQuality(now){
     if(badStreak>0)badStreak--;
     if(goodStreak>0)goodStreak--;
   }
-  perfFrames=0;perfStart=now;
 }
 
-function draw(){
-  if(document.hidden){requestAnimationFrame(draw);return}
-  if(!bx)return;
+function frame(){
   const now=performance.now();
+  // Idle Throttling: Nếu không tương tác > 5 giây, giảm tần suất vẽ để chống nóng máy và tụt pin
+  if(now - lastInteractionTime > 5000 && Math.random() > 0.4) return;
+
   adjustQuality(now);
   const n=pts.length;
   const L=Math.min(W,H)*.28,L2=L*L,F=Math.max(W,H)*1.1;
@@ -538,7 +615,7 @@ function draw(){
     bx.fillStyle='hsla('+A.h+',100%,70%,'+Math.min(1,.3+A.s*.55).toFixed(3)+')';
     bx.beginPath();bx.arc(A.x,A.y,Math.max(.8,A.s*(near?3.4:2.2)),0,6.283);bx.fill();
   }
-  if(px>0){
+  if(px>=0){
     if(px!==gx||py!==gy){
       grad=bx.createRadialGradient(px,py,0,px,py,60);
       grad.addColorStop(0,'rgba(0,242,254,.25)');
@@ -547,11 +624,18 @@ function draw(){
     }
     bx.fillStyle=grad;bx.fillRect(px-60,py-60,120,120);
   }
-  if(px!==lx||py!==ly){lx=px;ly=py;px<0?untilt():tilt(px,py)}
+  const ae=document.activeElement,hold=lockTilt||(ae&&(ae.tagName==='INPUT'||ae.tagName==='TEXTAREA'));
+  if(px>=0&&!hold){if(px!==lx||py!==ly||!tilted){lx=px;ly=py;tilt(px,py);tilted=true}}
+  else if(tilted){untilt();tilted=false;lx=ly=0}
+}
+let drawErr=0;
+function draw(){
+  if(!bx)return;
+  try{if(!document.hidden)frame();drawErr=0}catch(e){rpt(e,'canvas');if(++drawErr>30)return}
   requestAnimationFrame(draw);
 }
 
-/* ===== Nghiêng 3D panel: batch read → write ===== */
+/* ===== Nghiêng 3D panel ===== */
 const panels=[...document.querySelectorAll('.panel')];
 const cl=v=>Math.max(-.6,Math.min(.6,v));
 function tilt(x,y){
@@ -571,28 +655,34 @@ function tilt(x,y){
 }
 function untilt(){for(const p of panels){p.style.transform='';p.style.setProperty('--go',0)}}
 
-const aim=(x,y)=>{px=x;py=y;mx=x/innerWidth-.5;my=y/innerHeight-.5};
-const off=()=>{px=py=-999;mx=my=0};
-addEventListener('pointermove',e=>aim(e.clientX,e.clientY));
-addEventListener('touchstart',e=>{const t=e.touches[0];if(t)aim(t.clientX,t.clientY)},{passive:true});
-addEventListener('touchmove',e=>{const t=e.touches[0];if(t)aim(t.clientX,t.clientY)},{passive:true});
+const aim=(x,y)=>{px=x;py=y;mx=x/innerWidth-.5;my=y/innerHeight-.5;lastInteractionTime=performance.now();};
+const off=()=>{px=py=-999;mx=my=0;lockTilt=false};
+addEventListener('pointermove',e=>{if(!lockTilt)aim(e.clientX,e.clientY)});
+addEventListener('touchstart',e=>{const t=e.touches[0];lockTilt=!!(e.target&&e.target.closest&&e.target.closest('input,textarea'));if(t&&!lockTilt)aim(t.clientX,t.clientY)},{passive:true});
+addEventListener('touchmove',e=>{const t=e.touches[0];if(t&&!lockTilt)aim(t.clientX,t.clientY)},{passive:true});
 addEventListener('touchend',off);addEventListener('touchcancel',off);
+document.documentElement.addEventListener('pointerleave',off);
+document.addEventListener('mouseout',e=>{if(!e.relatedTarget)off()});
+addEventListener('pointerup',e=>{if(e.pointerType!=='mouse')off()});
+addEventListener('pointercancel',off);
+addEventListener('blur',off);
 
-/* Reset perf khi quay lại tab — tránh false positive FPS=0 */
 document.addEventListener('visibilitychange',()=>{
   if(!document.hidden){
-    perfStart=performance.now();perfFrames=0;
-    badStreak=0;goodStreak=0;skipWindows=1;
+    perfStart=performance.now();perfFrames=0;trimFrom=0;
+    badStreak=0;goodStreak=0;skipWindows=1;lastInteractionTime=performance.now();
   }
 });
 
-/* Resize debounce — re-seed khi hướng màn hình đổi */
-let resizeTimer=null;
+let lw=innerWidth,resizeTimer=null;
+function keepIn(el){if(!el.style.top)return;const r=el.getBoundingClientRect();el.style.left=Math.max(0,Math.min(innerWidth-el.offsetWidth,r.left))+'px';el.style.top=Math.max(0,Math.min(innerHeight-el.offsetHeight,r.top))+'px'}
 addEventListener('resize',()=>{
-  if(resizeTimer)clearTimeout(resizeTimer);
+  clearTimeout(resizeTimer);
   resizeTimer=setTimeout(()=>{
-    size();seed();
-    if(fxc&&fxc.width>0){fxc.width=innerWidth;fxc.height=innerHeight;sp.length=0;fxOn=0}
+    size();
+    if(innerWidth!==lw){lw=innerWidth;seed()}
+    if(fxc&&(fxc.width!==innerWidth||fxc.height!==innerHeight)){fxc.width=innerWidth;fxc.height=innerHeight}
+    keepIn($('musicToggle'));keepIn($('sysW'));
   },200);
 });
 
@@ -603,7 +693,7 @@ function drag(el,tap){
   el.addEventListener('pointermove',e=>{
     if(!on)return;
     const dx=e.clientX-sx,dy=e.clientY-sy;
-    if(Math.abs(dx)+Math.abs(dy)>5)mv=1;
+    if(Math.hypot(dx,dy)>(e.pointerType==='touch'?10:5))mv=1;
     if(mv){
       el.style.left=Math.max(0,Math.min(innerWidth-el.offsetWidth,ox+dx))+'px';
       el.style.top=Math.max(0,Math.min(innerHeight-el.offsetHeight,oy+dy))+'px';
@@ -613,11 +703,28 @@ function drag(el,tap){
   el.addEventListener('pointerup',()=>{on=0;if(!mv&&tap)tap()});
   el.addEventListener('pointercancel',()=>{on=0});
 }
-drag($('musicToggle'),toggleMusic);
-drag($('sysW'));
 
-/* ===== Init ===== */
-size();seed();draw();
+function startLaunch(){launch().catch(e=>{rpt(e,'launch');$('goBtn').disabled=false})}
+function typingState(){const a=document.activeElement;document.body.classList.toggle('typing',!!(a&&(a.tagName==='INPUT'||a.tagName==='TEXTAREA')))}
+function wire(){
+  on('touchScreen','click',goBoot);
+  on('btnKey','click',verifyKey);
+  on('goBtn','click',startLaunch);
+  on('btnCopy','click',copyCode);
+  on('btnClose','click',closeRun);
+  on('shot','load',function(){this.classList.remove('hidden');$('tag').textContent='● LIVE FEED'});
+  const t=document.getElementById('target');
+  if(t)['input','change','paste','keyup','blur'].forEach(ev=>t.addEventListener(ev,()=>ev==='paste'?setTimeout(detect,0):detect()));
+  document.addEventListener('focusin',typingState);
+  document.addEventListener('focusout',()=>setTimeout(typingState,0));
+}
+
+safe(wire,'gắn sự kiện');
+safe(()=>drag($('musicToggle'),toggleMusic),'nút nhạc');
+safe(()=>drag($('sysW')),'widget');
+safe(size,'canvas size');safe(seed,'canvas seed');safe(draw,'canvas draw');
+}catch(e){window.__report?window.__report(e,'khởi động'):alert('Lỗi JS: '+e.message)}
+})();
 </script>
 </body>
 </html>
